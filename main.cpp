@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    w.setWindowTitle("Лабораторна робота №4, Деркач Д.А. ПІ-201");
+    w.setWindowTitle("Spanning-tree");
     w.show();
     return a.exec();
 }

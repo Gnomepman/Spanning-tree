@@ -42,7 +42,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Граф</string>
+     <string>Graph</string>
     </property>
    </widget>
    <widget class="QTableWidget" name="tableSum">
@@ -89,7 +89,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Кількість вершин</string>
+        <string>Number of vertices</string>
        </property>
       </widget>
      </item>
@@ -156,7 +156,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Остове дерево</string>
+     <string>Spanning-tree</string>
     </property>
    </widget>
    <widget class="QListWidget" name="listWidget">
