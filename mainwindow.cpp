@@ -3,11 +3,10 @@
 #include "QGraphicsTextItem"
 #include "QListWidget"
 
-//можем контролировать радиус вершины и радиус в т.н. уравнении круга
+//can control radius of vertices and distance between them
 #define ellipseRadius 30
 #define radius 120
 
-//кисти, ручки
 QBrush whiteBrush(Qt::white);
 
 QPen bluepen(Qt::blue);
@@ -29,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     scene->clearFocus();
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
-    ui->graphicsView->setRenderHint(QPainter::Antialiasing);//сглаживание в сцене (кайф)
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
 
     graypen.setWidth(3);
     bluepen.setWidth(2);
@@ -46,7 +45,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//функция для построения вершин
+//function for building vertices
 void MainWindow::paintVerticies(int numberOfverticies){
     if (numberOfverticies==0)
         return;
@@ -85,10 +84,10 @@ void MainWindow::on_pushButton_2_clicked()
     edges.clear();
     scene->clear();
 
-    //проходим по таблице, запоминаем связи между вершинами
+    //remembering every connection between vertices
     for(int i=0; i<ui->tableSum->rowCount(); ++i){
         for(int j=0; j<ui->tableSum->rowCount(); ++j){
-            if (i>j){//проход только выше главной диагонали, т.к. граф неориентированный
+            if (i>j){
                 continue;
             }
             if(ui->tableSum->item(i,j)->text()!="0"){
@@ -100,7 +99,6 @@ void MainWindow::on_pushButton_2_clicked()
         }
     }
 
-    //для каждой связи в векторе, строим рёбра
     for (Connections item : edges) {
         if(item.first==item.second){
             scene->addEllipse(radius*cos(item.first)-5,radius*sin(item.second)-5,ellipseRadius+5,ellipseRadius+5,bluepenDot);
@@ -109,7 +107,6 @@ void MainWindow::on_pushButton_2_clicked()
                            radius*cos(item.second)+7,radius*sin(item.second)+3,bluepen);
         }
     }
-    //после рёбер строим поверх вершины
     paintVerticies(ui->tableSum->columnCount());
 }
 
@@ -122,7 +119,7 @@ void MainWindow::on_tableSum_cellClicked(int row, int column)
     ui->tableSum->setItem(column,row,mirrored);
 }
 
-//скопировать в буфер обмена символ "∞"
+//copies symbol "∞" to clipboard
 void MainWindow::on_pushButton_3_clicked()
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
@@ -147,12 +144,11 @@ void eraseElement(std::vector <int> &myVector, int element){
 }
 
 int sum = 0;
-//функция для поиска и последующего постоения ребра.
-//принимает номер строки (по ней будет проход) и вектор с вершинами
+
 void MainWindow::buildTreePath(int &i, std::vector <int> &vertices){
     int min=INT_MAX, position=0;
     for(int j=0; j<ui->tableSum->rowCount(); ++j){
-        if(ui->tableSum->item(i,j)->text()=="∞" || i==j || /**/ui->tableSum->item(i,j)->text().toInt()==0/**/){
+        if(ui->tableSum->item(i,j)->text()=="∞" || i==j || ui->tableSum->item(i,j)->text().toInt()==0){
             continue;
         }
         else if (ui->tableSum->item(i,j)->text().toInt()<min){
@@ -173,7 +169,7 @@ void MainWindow::buildTreePath(int &i, std::vector <int> &vertices){
     i=position;
 }
 
-//остове дерево
+//spanning tree
 void MainWindow::on_pushButton_4_clicked()
 {
     ui->listWidget->clear();
@@ -185,11 +181,11 @@ void MainWindow::on_pushButton_4_clicked()
     int i=0;
     do{
         buildTreePath(i,vertices);
-    }while(/*!vertices.empty()*/ vertices.size()!=1);
+    }while(vertices.size()!=1);
 
     paintVerticies(ui->tableSum->columnCount());
     QListWidgetItem *item = new QListWidgetItem;
-    item->setText("Вага кістякового\nдерева: "+QString::number(sum));
+    item->setText("Spanning tree \nweight: "+QString::number(sum));
     ui->listWidget->addItem(item);
 
 }
